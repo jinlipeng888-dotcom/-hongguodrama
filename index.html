@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>红果短剧推广教程</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #e8341c; --red-light: #fff1ee; --red-mid: #ffcfc7;
+  --green: #22c55e; --green-light: #f0fdf4;
+  --gray: #6b7280; --border: #e5e7eb;
+  --text: #111827; --text2: #374151;
+}
+body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background:#f3f4f6; color:var(--text); min-height:100vh; }
+
+/* ── 编辑工具栏 ── */
+#edit-toolbar {
+  background:#1e293b; color:#fff; padding:10px 16px;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:13px;
+  position:sticky; top:0; z-index:999;
+}
+.edit-badge { background:#f59e0b; color:#1e293b; border-radius:4px; padding:2px 8px; font-size:11px; font-weight:700; }
+.toolbar-hint { opacity:.65; font-size:12px; }
+.tbtn {
+  border:none; border-radius:7px; padding:7px 13px; font-size:12px; font-weight:700;
+  cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:.15s;
+}
+.tbtn-gray   { background:#334155; color:#fff; } .tbtn-gray:hover   { background:#475569; }
+.tbtn-red    { background:#e8341c; color:#fff; } .tbtn-red:hover    { background:#c9281a; }
+.tbtn-yellow { background:#f59e0b; color:#1e293b; } .tbtn-yellow:hover { background:#d97706; }
+.tbtn-green  { background:#16a34a; color:#fff; } .tbtn-green:hover  { background:#15803d; }
+
+/* ── Header ── */
+.header { background:linear-gradient(135deg,#e8341c 0%,#ff6b35 100%); color:#fff; padding:20px 16px 16px; text-align:center; }
+.header h1 { font-size:20px; font-weight:700; }
+.header p  { font-size:13px; opacity:.85; margin-top:4px; }
+
+/* ── Tabs ── */
+.tab-bar {
+  display:flex; background:#fff; border-bottom:2px solid var(--border);
+  overflow-x:auto; -webkit-overflow-scrolling:touch; position:sticky; top:0; z-index:100;
+}
+.tab-bar::-webkit-scrollbar { display:none; }
+.tab { flex:1; min-width:90px; padding:12px 6px; text-align:center; font-size:13px; font-weight:500; color:var(--gray); cursor:pointer; border-bottom:3px solid transparent; transition:.2s; white-space:nowrap; }
+.tab.active { color:var(--red); border-bottom-color:var(--red); font-weight:700; }
+.tab-icon { font-size:18px; display:block; margin-bottom:2px; }
+
+/* ── Panel / Card ── */
+.panel { display:none; padding:16px; max-width:680px; margin:0 auto; }
+.panel.active { display:block; }
+.card { background:#fff; border-radius:12px; padding:16px; margin-bottom:14px; box-shadow:0 1px 4px rgba(0,0,0,.07); }
+.card-title { font-size:15px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+
+/* ── Flow ── */
+.flow { display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+.flow-item-wrap { display:flex; align-items:center; gap:6px; }
+.flow-item { background:var(--red); color:#fff; border-radius:20px; padding:5px 14px; font-size:13px; font-weight:600; outline:none; white-space:nowrap; }
+.flow-arrow { color:var(--gray); font-size:16px; }
+.btn-del-flow { display:none; background:#dc2626; color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:11px; cursor:pointer; line-height:1; }
+body.edit-mode .btn-del-flow { display:flex; align-items:center; justify-content:center; }
+.btn-add-flow { display:none; background:var(--red-light); color:var(--red); border:1.5px dashed var(--red-mid); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer; margin-top:8px; }
+body.edit-mode .btn-add-flow { display:inline-flex; align-items:center; gap:4px; }
+
+/* ── Steps ── */
+.step-list { display:flex; flex-direction:column; gap:18px; }
+.step { display:flex; gap:12px; align-items:flex-start; position:relative; }
+.step-num { flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--red); color:#fff; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.step-body { flex:1; padding-top:3px; }
+.step-body p { font-size:14px; line-height:1.6; color:var(--text2); outline:none; }
+.step-body .tip { margin-top:6px; background:var(--red-light); border-left:3px solid var(--red); padding:6px 10px; border-radius:0 6px 6px 0; font-size:13px; color:var(--red); outline:none; }
+.btn-del-step { display:none; position:absolute; top:0; right:0; background:#fee2e2; color:#dc2626; border:none; border-radius:50%; width:22px; height:22px; font-size:13px; cursor:pointer; font-weight:700; }
+body.edit-mode .btn-del-step { display:flex; align-items:center; justify-content:center; }
+.btn-add-step { display:none; width:100%; margin-top:14px; padding:10px; background:var(--red-light); color:var(--red); border:1.5px dashed var(--red-mid); border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; }
+body.edit-mode .btn-add-step { display:block; }
+
+/* ── Tip toggle ── */
+.btn-toggle-tip { display:none; margin-top:6px; font-size:11px; font-weight:600; color:var(--gray); background:#f3f4f6; border:1px solid var(--border); border-radius:6px; padding:3px 8px; cursor:pointer; }
+body.edit-mode .btn-toggle-tip { display:inline-block; }
+
+/* ── Editable highlight ── */
+body.edit-mode [contenteditable="true"]:hover { outline:1px dashed rgba(232,52,28,.45); border-radius:3px; cursor:text; }
+body.edit-mode [contenteditable="true"]:focus { outline:2px solid var(--red); border-radius:3px; background:#fff9f8; }
+
+/* ── Image slot ── */
+.img-slot { position:relative; margin-top:10px; border-radius:10px; overflow:hidden; }
+.slot-empty { background:#f3f4f6; border:1.5px dashed #d1d5db; border-radius:10px; padding:18px 10px; text-align:center; color:#9ca3af; font-size:12px; transition:.2s; }
+.slot-icon { font-size:22px; display:block; margin-bottom:4px; }
+.slot-action { display:none; font-size:12px; font-weight:600; color:var(--red); margin-top:3px; }
+.slot-hint { font-size:11px; color:#c4c9d0; display:block; margin-top:2px; }
+.slot-img { width:100%; display:none; border-radius:10px; border:1px solid var(--border); }
+.slot-overlay { display:none; position:absolute; inset:0; background:rgba(0,0,0,.42); align-items:center; justify-content:center; gap:6px; color:#fff; font-size:13px; font-weight:700; border-radius:10px; cursor:pointer; }
+.btn-clear-img { display:none; position:absolute; top:6px; right:6px; background:#dc2626; color:#fff; border:none; border-radius:50%; width:24px; height:24px; font-size:13px; cursor:pointer; font-weight:700; z-index:10; align-items:center; justify-content:center; }
+body.edit-mode .img-slot { cursor:pointer; }
+body.edit-mode .slot-action { display:block; }
+body.edit-mode .img-slot:hover .slot-empty { border-color:var(--red); background:var(--red-light); }
+body.edit-mode .img-slot.has-img:hover .slot-overlay { display:flex; }
+body.edit-mode .img-slot.has-img .btn-clear-img { display:flex; }
+
+/* ── Success badge ── */
+.success-badge { display:inline-flex; align-items:center; gap:5px; background:var(--green-light); border:1px solid #bbf7d0; color:#15803d; border-radius:20px; padding:4px 12px; font-size:13px; font-weight:600; margin-top:10px; }
+
+/* ── Copy panel ── */
+.tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.tag { background:var(--red-light); color:var(--red); border-radius:20px; padding:4px 12px; font-size:12px; font-weight:600; cursor:pointer; border:1.5px solid var(--red-mid); transition:.15s; }
+.tag:hover,.tag.active { background:var(--red); color:#fff; }
+.copy-box { background:#f9fafb; border:1px solid var(--border); border-radius:8px; padding:12px; font-size:13px; line-height:1.75; color:var(--text2); white-space:pre-wrap; word-break:break-all; outline:none; }
+.copy-btn { display:inline-flex; align-items:center; gap:5px; margin-top:8px; padding:7px 16px; background:var(--red); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+.copy-btn.copied { background:var(--green); }
+.notice { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:10px 12px; font-size:13px; color:#92400e; margin-top:10px; line-height:1.6; outline:none; }
+
+/* ── Tricks list ── */
+.tricks-list { font-size:14px; color:var(--text2); line-height:1.9; outline:none; }
+
+/* ── Footer ── */
+.footer { text-align:center; padding:20px; font-size:12px; color:#9ca3af; }
+
+  /* ── P3 小按鈕 ── */
+  .tbtn-sm { display:none; background:var(--red-light); color:var(--red); border:1.5px solid var(--red-mid); border-radius:8px; padding:4px 10px; font-size:12px; font-weight:700; cursor:pointer; }
+  .tbtn-sm:hover { background:var(--red); color:#fff; }
+  body.edit-mode .tbtn-sm { display:inline-flex; align-items:center; gap:3px; }
+
+  /* ── 对标账号 ── */
+  .ref-list { display:flex; flex-direction:column; }
+  .ref-row { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid #f3f4f6; }
+  .ref-row:last-child { border-bottom:none; }
+  .ref-icon { font-size:18px; flex-shrink:0; padding-top:1px; }
+  .ref-content { flex:1; font-size:13px; line-height:1.7; color:var(--text2); white-space:pre-wrap; word-break:break-all; outline:none; }
+  .ref-actions { display:flex; gap:5px; flex-shrink:0; align-items:center; }
+  .btn-copy-sm { background:var(--red-light); color:var(--red); border:1px solid var(--red-mid); border-radius:6px; padding:4px 8px; font-size:12px; cursor:pointer; font-weight:600; }
+  .btn-copy-sm.copied { background:var(--green); color:#fff; border-color:var(--green); }
+  .btn-del-sm { display:none; background:#fee2e2; color:#dc2626; border:none; border-radius:6px; padding:4px 8px; font-size:12px; cursor:pointer; font-weight:700; }
+  body.edit-mode .btn-del-sm { display:inline-block; }
+  .ref-add-row { display:none; padding:10px 0 2px; }
+  body.edit-mode .ref-add-row { display:block; }
+
+  /* ── 开头模板标签 ── */
+  .opening-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; align-items:center; }
+  .opening-tag { display:inline-flex; align-items:center; gap:5px; border-radius:20px; padding:5px 14px; font-size:12px; font-weight:700; cursor:pointer; border:2px solid transparent; transition:.15s; color:#fff; user-select:none; }
+  .opening-tag.active { outline:3px solid rgba(0,0,0,.2); outline-offset:1px; }
+  .opening-tag-name { outline:none; background:transparent; border:none; color:inherit; font:inherit; cursor:pointer; min-width:20px; }
+  .opening-tag-del { display:none; font-size:12px; line-height:1; cursor:pointer; opacity:.85; }
+  body.edit-mode .opening-tag-del { display:inline; }
+  .opening-add-tag { display:none; }
+  body.edit-mode .opening-add-tag { display:inline-flex; }
+  .opening-content-box { font-size:13px; line-height:1.75; color:var(--text2); background:#f9fafb; border:1px solid var(--border); border-radius:8px; padding:12px; min-height:60px; white-space:pre-wrap; word-break:break-all; outline:none; }
+  body.edit-mode .opening-content-box:focus { background:#fff; border-color:var(--red); }
+
+  /* ── 文案模板 accordion ── */
+  .copy-accordion { display:flex; flex-direction:column; gap:8px; }
+  .copy-row { border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#fff; }
+  .copy-row-hd { display:flex; align-items:center; gap:8px; padding:11px 12px; cursor:pointer; transition:.15s; }
+  .copy-row-hd:hover { background:#f9fafb; }
+  .copy-expand { font-size:10px; color:var(--gray); transition:transform .2s; flex-shrink:0; }
+  .copy-row.open .copy-expand { transform:rotate(90deg); }
+  .copy-row-title { font-size:14px; font-weight:600; flex:1; outline:none; }
+  .copy-row-tags { display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+  .copy-tag-pill { font-size:11px; font-weight:700; border-radius:12px; padding:2px 8px; color:#fff; display:inline-flex; align-items:center; gap:3px; }
+  .copy-tag-pill .pill-del { display:none; cursor:pointer; font-size:10px; }
+  body.edit-mode .copy-tag-pill .pill-del { display:inline; }
+  .copy-row-acts { display:flex; gap:5px; flex-shrink:0; margin-left:4px; }
+  .copy-row-body { display:none; border-top:1px solid var(--border); padding:12px; background:#f9fafb; }
+  .copy-row.open .copy-row-body { display:block; }
+  .copy-body-text { font-size:13px; line-height:1.75; color:var(--text2); outline:none; white-space:pre-wrap; word-break:break-all; min-height:80px; }
+  body.edit-mode .copy-body-text:focus { background:#fff; outline:1px solid var(--red); border-radius:4px; }
+  .copy-body-footer { display:flex; align-items:center; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .add-pill-btn { display:none; }
+  body.edit-mode .add-pill-btn { display:inline-flex; }
+  .copy-del-btn { display:none; }
+  body.edit-mode .copy-del-btn { display:inline-block; }
+
+  /* ── Reset confirm ── */
+.confirm-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:9999; align-items:center; justify-content:center; }
+.confirm-overlay.show { display:flex; }
+.confirm-box { background:#fff; border-radius:14px; padding:24px; max-width:300px; text-align:center; }
+.confirm-box h3 { font-size:16px; margin-bottom:8px; }
+.confirm-box p { font-size:13px; color:var(--gray); margin-bottom:20px; line-height:1.6; }
+.confirm-btns { display:flex; gap:10px; justify-content:center; }
+</style>
+</head>
+<body>
+
+<!-- ════ Header ════ -->
+<div class="header">
+  <h1 id="main-title" contenteditable="false" spellcheck="false" style="outline:none">🍎 红果短剧推广教程</h1>
+  <p  id="main-sub"   contenteditable="false" spellcheck="false" style="outline:none">三步学会 · 轻松上手 · 快速出单</p>
+</div>
+
+<!-- ════ Tabs ════ -->
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab(0)"><span class="tab-icon">🔑</span><span id="tab0-name">关键词申请</span></div>
+  <div class="tab"        onclick="switchTab(1)"><span class="tab-icon">📋</span><span id="tab1-name">关键词回填</span></div>
+  <div class="tab"        onclick="switchTab(2)"><span class="tab-icon">✍️</span><span id="tab2-name">文案参考</span></div>
+</div>
+
+<!-- ════════ PANEL 0 · 关键词申请 ════════ -->
+<div class="panel active" id="panel-0">
+
+  <!-- 整体流程 -->
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title">🗺️ <span contenteditable="false" spellcheck="false">整体流程</span></div>
+    <div class="flow" id="flow-0">
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">打开右豹</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)" title="删除">×</button>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">官方任务台</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)" title="删除">×</button>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">选项目</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)" title="删除">×</button>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">搜剧名</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)" title="删除">×</button>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">申请关键词</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)" title="删除">×</button>
+      </div>
+    </div>
+    <button class="btn-add-flow" onclick="addFlowItem('flow-0')">＋ 添加步骤</button>
+  </div>
+
+  <!-- 详细步骤 -->
+  <div class="card">
+    <div class="card-title">📱 <span contenteditable="false" spellcheck="false">详细步骤</span></div>
+    <div class="step-list" id="steps-0">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">微信小程序搜索 <strong>「右豹」</strong>，进入主页，找到 <strong>官方任务台</strong></p>
+          <div class="img-slot" id="slot-a1" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">右豹小程序主页</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-a1')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">点击 <strong>复制链接</strong> 及 <strong>专属邀请码</strong>，粘贴到浏览器打开</p>
+          <div class="tip" contenteditable="false" spellcheck="false">⚠️ 注意：要用浏览器打开，不能直接在小程序内操作</div>
+          <div class="img-slot" id="slot-a2" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">复制链接和邀请码的位置</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-a2')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">进入官方任务台主页，选择 <strong>红果短剧</strong> 项目</p>
+          <div class="img-slot" id="slot-a3" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">官方任务台选项目页面</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-a3')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">在搜索框中输入 <strong>你想推广的剧名</strong>，找到对应剧集</p>
+          <div class="img-slot" id="slot-a4" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">搜索剧名页面</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-a4')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">点击 <strong>申请关键词</strong>，自己填写一个关键词（可以直接用剧名）</p>
+          <div class="tip" contenteditable="false" spellcheck="false">💡 建议直接用剧名作为关键词，方便记忆</div>
+          <div class="img-slot" id="slot-a5" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">申请关键词弹窗</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-a5')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">弹出成功提示 → 申请完成！</p>
+          <div class="tip" contenteditable="false" spellcheck="false">❌ 如果申请失败，换一个关键词重新申请即可</div>
+          <div class="img-slot" id="slot-a6" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">申请成功的弹窗提示</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-a6')">×</button>
+          </div>
+          <div class="success-badge">✅ 弹出提示 = 申请成功</div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+    </div>
+    <button class="btn-add-step" onclick="addStep('steps-0','a')">＋ 添加步骤</button>
+  </div>
+</div>
+
+<!-- ════════ PANEL 1 · 关键词回填 ════════ -->
+<div class="panel" id="panel-1">
+
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title">🗺️ <span contenteditable="false" spellcheck="false">整体流程</span></div>
+    <div class="flow" id="flow-1">
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">发布视频</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)">×</button>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">复制视频链接</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)">×</button>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">任务台回填</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)">×</button>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-item-wrap">
+        <div class="flow-item" contenteditable="false" spellcheck="false">等待生效</div>
+        <button class="btn-del-flow" onclick="delFlowItem(this)">×</button>
+      </div>
+    </div>
+    <button class="btn-add-flow" onclick="addFlowItem('flow-1')">＋ 添加步骤</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📝 <span contenteditable="false" spellcheck="false">详细步骤</span></div>
+    <div class="step-list" id="steps-1">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">视频发布后，<strong>复制视频链接</strong>（在平台视频页面点击分享即可获得）</p>
+          <div class="img-slot" id="slot-b1" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">复制视频链接的操作位置</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-b1')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">打开官方任务台，进入 <strong>申词记录</strong>，找到对应关键词和剧名，点击 <strong>回填</strong></p>
+          <div class="img-slot" id="slot-b2" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">申词记录页面及回填入口</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-b2')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">选择视频发布的 <strong>平台</strong>（如抖音、快手、B站等）</p>
+          <div class="img-slot" id="slot-b3" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">选择平台的下拉选项</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-b3')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">粘贴视频链接</p>
+          <div class="tip" contenteditable="false" spellcheck="false">⚠️ 关键提醒：粘贴时要删除 http 前面多余的文字，只保留链接本身！</div>
+          <div class="img-slot" id="slot-b4" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">粘贴链接正确/错误对比示例</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-b4')">×</button>
+          </div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <p contenteditable="false" spellcheck="false">提交后查看别名状态</p>
+          <div class="img-slot" id="slot-b5" onclick="slotClick(this)">
+            <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">别名状态「生效中」的截图</span></div>
+            <img class="slot-img" src=""><video class="slot-video" controls playsinline style="display:none;width:100%;border-radius:10px;border:1px solid #e5e7eb;"></video><div class="slot-overlay">📷🎬 点击更换</div>
+            <button class="btn-clear-img" onclick="clearSlot(event,'slot-b5')">×</button>
+          </div>
+          <div class="success-badge">✅ 别名状态「生效中」= 回填成功</div>
+        </div>
+        <button class="btn-del-step" onclick="delStep(this)">×</button>
+      </div>
+
+    </div>
+    <button class="btn-add-step" onclick="addStep('steps-1','b')">＋ 添加步骤</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">❓ <span contenteditable="false" spellcheck="false">常见问题</span></div>
+    <div contenteditable="false" spellcheck="false" style="font-size:14px;color:var(--text2);line-height:1.8;outline:none;">
+      <p>🔹 <strong>链接粘贴后提示格式错误？</strong><br>检查链接前是否有多余文字，只保留 http 开头的部分。</p>
+      <br>
+      <p>🔹 <strong>状态一直显示「审核中」？</strong><br>正常等待 1-2 小时，平台审核通过后自动变为「生效中」。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PANEL 2 · 文案参考 ════════ -->
+<div class="panel" id="panel-2">
+
+  <!-- 对标账号 -->
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title" style="justify-content:space-between;">
+      <span>📌 对标账号</span>
+      <button class="tbtn-sm" onclick="addRef()">＋ 添加账号</button>
+    </div>
+    <div class="ref-list" id="ref-list"><!-- dynamic --></div>
+  </div>
+
+  <!-- 爆款开头标题模板 -->
+  <div class="card">
+    <div class="card-title">🎬 爆款开头标题模板</div>
+    <div class="opening-tags" id="opening-tags"><!-- dynamic --></div>
+    <div id="opening-content" class="opening-content-box" contenteditable="false" spellcheck="false"></div>
+    <button class="copy-btn" style="margin-top:8px" onclick="copyOpening(this)">📋 复制</button>
+  </div>
+
+  <!-- 爆款文案模板 -->
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between;">
+      <span>✍️ 爆款文案模板</span>
+      <button class="tbtn-sm" onclick="addCopy()">＋ 添加模板</button>
+    </div>
+    <div class="notice" style="margin-bottom:12px;margin-top:4px;">📌 实际发布时推荐只选 <strong>2-3 部剧</strong>，精简更有效！</div>
+    <div class="copy-accordion" id="copy-list"><!-- dynamic --></div>
+  </div>
+
+  <!-- 文案技巧 -->
+  <div class="card">
+    <div class="card-title">💡 <span contenteditable="false" spellcheck="false">文案创作小技巧</span></div>
+    <div class="tricks-list" contenteditable="false" spellcheck="false">
+      <p>🔹 开头要有 <strong>强钩子</strong>，前两句话决定用户是否继续看</p>
+      <p>🔹 推荐 <strong>2-3 部剧</strong>，每部剧用一段简短的剧情描述</p>
+      <p>🔹 突出 <strong>情绪爽点</strong>：虐、甜、爽、反转，选一个主攻方向</p>
+      <p>🔹 结尾加 <strong>催促语</strong>：「没看过太可惜」「闭眼冲就对了」</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">红果短剧推广教程 · 内部使用</div>
+
+
+<script>
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let isEditMode = false;
+let activeTplIdx = 0;
+let saveTimer = null;
+const videoFiles = {};   // slotId → File (session only, not persisted)
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  initP3();
+});
+
+// ══════════════════════════════════════════
+//  EDIT MODE
+// ══════════════════════════════════════════
+function applyEditMode(on) {
+  isEditMode = on;
+  document.body.classList.toggle('edit-mode', on);
+  // Toggle contenteditable on all editable elements
+  const selector = [
+    '#main-title','#main-sub',
+    '[id^="tab"][id$="-name"]',
+    '.card-title span',
+    '.flow-item',
+    '.step-body p',
+    '.step-body .tip',
+    '.step-body div[contenteditable]',
+    '.tricks-list'
+  ].join(',');
+  document.querySelectorAll(selector).forEach(el => {
+    el.contentEditable = on ? 'true' : 'false';
+  });
+  // Common editable divs (FAQ card, etc.)
+  document.querySelectorAll('[contenteditable]').forEach(el => {
+    if (!el.id || !el.id.startsWith('slot')) {
+      if (on) el.contentEditable = 'true';
+    }
+  });
+  // Stop img-slots from being contenteditable
+  document.querySelectorAll('.img-slot,.slot-empty,.slot-img,.slot-video,.slot-overlay,.btn-clear-img').forEach(el => {
+    el.removeAttribute('contenteditable');
+  });
+  // Re-render P3 so contenteditable toggles correctly
+  renderRefs();
+  renderOpenings();
+  renderCopies();
+  // Attach auto-save listeners
+  if (on) attachSaveListeners();
+}
+
+let saveListenersAttached = false;
+function attachSaveListeners() {
+  if (saveListenersAttached) return;
+  saveListenersAttached = true;
+  document.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveState, 800);
+  });
+}
+
+let previewing = false;
+function togglePreview(btn) {
+  previewing = !previewing;
+  if (previewing) {
+    saveState();
+    applyEditMode(false);
+    document.getElementById('edit-toolbar').style.opacity = '.4';
+    btn.textContent = '✏️ 返回编辑';
+  } else {
+    applyEditMode(true);
+    document.getElementById('edit-toolbar').style.opacity = '1';
+    btn.textContent = '👁 预览达人视图';
+  }
+}
+
+// ══════════════════════════════════════════
+//  TAB
+// ══════════════════════════════════════════
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+// ══════════════════════════════════════════
+//  P3 DATA ENGINE
+// ══════════════════════════════════════════
+const TAG_COLORS = ['#e8341c','#7c3aed','#2563eb','#059669','#d97706','#db2777','#0891b2','#65a30d','#6b7280'];
+let colorCursor = 0;
+function nextColor() { return TAG_COLORS[(colorCursor++) % TAG_COLORS.length]; }
+function genId() { return '_' + Math.random().toString(36).slice(2,9); }
+
+const DEFAULT_P3 = {
+  refs: [
+    { id:'r1', text:'长按复制此条消息，打开抖音搜索，查看TA的更多作品。\nhttps://v.douyin.com/l1zS1X-Mzr4/' }
+  ],
+  openings: [
+    { id:'o1', tag:'姐弟恋', color:'#e8341c', text:'谁还没磕年下姐狗恋！真的香到践脚！奶狗弟弟不墨迹、不扭捽，满眼都是姐姐！直球告白、霸气护姐，对外是拽酷狼狗，对内是软萌奶狗，反差萌直接封神！' },
+    { id:'o2', tag:'大女主', color:'#7c3aed', text:'热度不等于观感！《白日提灯》霸榜却节奏缓慢，三部短剧直奔主题，爽点密集不啊喉，追剧体验直接吸打，没刷过太可惜。' },
+    { id:'o3', tag:'搞笑',   color:'#d97706', text:'重磅！能把人笑到失控的短剧，央妈都亲自盖章认可了！没骗人，我替你们试过，笑到差点工伤，这三部闭眼冲就对了！' },
+    { id:'o4', tag:'双女主', color:'#059669', text:'"这才是双女主剧的正确打开方式，别问，问就是双女主的快乐！"行囊羞涩都无恨，难得少女是妻妻，双向奔赴甜到骨子里！' }
+  ],
+  activeOpeningId: 'o1',
+  copies: [
+    { id:'c1', title:'模板一：BE美学合集', tags:[{text:'虚恋',color:'#7c3aed'}], expanded:false,
+      text:'颤抖吧内娱！长剧拍不出的BE美学竞被短剧狠狠拿捉，就连迪丽热巴都搬着小板凳在评论区打卡催更。\n\n【第一部】《宁愿几许》\n前世我是你的挚爱，却亲手将你推开。如今你已有良人在侧，我唯有青灯古佛相伴。寺庙重逢的那一刻，我只能双手合十，轻声道，祝施主与爱人白头偉老。\n\n【第二部】《许你一场悲欢》\n傅寒川你一定要长命百岁，以我之命，换你一生平安，这是最深情的告白，亦是最决绝的离别。\n\n【第三部】《星寒知晚》\n"我早就不爱你了"——冷血总裁狠心将她逃为死敌，字字如刀、步步见血，只想让她恨自己入骨，无人知晓他已命不久矣。所有残忍都是藏于骨血的深情，原来最痛的爱是甘愿被你记恨一生，也不舍你为我流泪。' }
+  ]
+};
+
+let p3 = JSON.parse(JSON.stringify(DEFAULT_P3));
+
+// ── Render: 对标账号 ──
+function renderRefs() {
+  const list = document.getElementById('ref-list');
+  if (!list) return;
+  list.innerHTML = p3.refs.map(r => `
+    <div class="ref-row" data-ref-id="${r.id}">
+      <div class="ref-icon">🔗</div>
+      <div class="ref-content" contenteditable="${isEditMode?'true':'false'}" spellcheck="false"
+        oninput="syncRef('${r.id}',this)">${escHtml(r.text)}</div>
+      <div class="ref-actions">
+        <button class="btn-copy-sm" onclick="copyEl(this.parentElement.previousElementSibling,this)">📋</button>
+        <button class="btn-del-sm" onclick="delRef('${r.id}')">×</button>
+      </div>
+    </div>`).join('');
+}
+
+function syncRef(id, el) {
+  const r = p3.refs.find(x=>x.id===id);
+  if (r) { r.text = el.innerText; schedSave(); }
+}
+function addRef() {
+  p3.refs.push({ id:genId(), text:'长按复制此条消息，打开抖音搜索，查看TA的更多作品。\nhttps://' });
+  renderRefs(); schedSave();
+  // focus last
+  const rows = document.querySelectorAll('#ref-list .ref-content');
+  if (rows.length) rows[rows.length-1].focus();
+}
+function delRef(id) {
+  p3.refs = p3.refs.filter(r=>r.id!==id);
+  renderRefs(); schedSave();
+}
+
+// ── Render: 爆款开头标题 ──
+function renderOpenings() {
+  const tagsEl = document.getElementById('opening-tags');
+  const contentEl = document.getElementById('opening-content');
+  if (!tagsEl || !contentEl) return;
+
+  tagsEl.innerHTML = p3.openings.map(o => `
+    <div class="opening-tag${o.id===p3.activeOpeningId?' active':''}"
+      style="background:${o.color}"
+      onclick="switchOpening('${o.id}')">
+      <span class="opening-tag-name" contenteditable="${isEditMode?'true':'false'}" spellcheck="false"
+        onclick="event.stopPropagation()"
+        oninput="syncOpeningTag('${o.id}',this)">${escHtml(o.tag)}</span>
+      <span class="opening-tag-del" onclick="event.stopPropagation();delOpening('${o.id}')">×</span>
+    </div>`).join('') +
+    `<button class="tbtn-sm opening-add-tag" onclick="addOpening()">＋ 添加类型</button>`;
+
+  const active = p3.openings.find(o=>o.id===p3.activeOpeningId) || p3.openings[0];
+  if (active) {
+    contentEl.innerText = active.text;
+    contentEl.dataset.openingId = active.id;
+    contentEl.contentEditable = isEditMode ? 'true' : 'false';
+    contentEl.oninput = () => { active.text = contentEl.innerText; schedSave(); };
+  }
+}
+
+function switchOpening(id) {
+  // Save current content first
+  const contentEl = document.getElementById('opening-content');
+  if (contentEl) {
+    const cur = p3.openings.find(o=>o.id===p3.activeOpeningId);
+    if (cur) cur.text = contentEl.innerText;
+  }
+  p3.activeOpeningId = id;
+  renderOpenings();
+  schedSave();
+}
+function syncOpeningTag(id, el) {
+  const o = p3.openings.find(x=>x.id===id);
+  if (o) { o.tag = el.innerText; schedSave(); }
+}
+function addOpening() {
+  const id = genId();
+  p3.openings.push({ id, tag:'新类型', color:nextColor(), text:'在这里填写这个类型的爆款开头文字…' });
+  p3.activeOpeningId = id;
+  renderOpenings(); schedSave();
+}
+function delOpening(id) {
+  p3.openings = p3.openings.filter(o=>o.id!==id);
+  if (p3.activeOpeningId===id) p3.activeOpeningId = p3.openings[0]?.id || null;
+  renderOpenings(); schedSave();
+}
+function copyOpening(btn) {
+  const el = document.getElementById('opening-content');
+  if (el) copyText(btn, el.innerText);
+}
+
+// ── Render: 爆款文案模板 ──
+function renderCopies() {
+  const list = document.getElementById('copy-list');
+  if (!list) return;
+  list.innerHTML = p3.copies.map(c => `
+    <div class="copy-row${c.expanded?' open':''}" data-copy-id="${c.id}">
+      <div class="copy-row-hd" onclick="toggleCopy('${c.id}')">
+        <span class="copy-expand">▶</span>
+        <span class="copy-row-title" contenteditable="${isEditMode?'true':'false'}" spellcheck="false"
+          onclick="event.stopPropagation()"
+          oninput="syncCopyTitle('${c.id}',this)">${escHtml(c.title)}</span>
+        <div class="copy-row-tags">
+          ${c.tags.map((t,ti)=>`
+            <span class="copy-tag-pill" style="background:${t.color}">
+              ${escHtml(t.text)}
+              <span class="pill-del" onclick="event.stopPropagation();delCopyTag('${c.id}',${ti})">×</span>
+            </span>`).join('')}
+        </div>
+        <div class="copy-row-acts">
+          <button class="btn-copy-sm" onclick="event.stopPropagation();copyCopyItem('${c.id}',this)">📋</button>
+          <button class="btn-del-sm copy-del-btn" onclick="event.stopPropagation();delCopy('${c.id}')">×</button>
+        </div>
+      </div>
+      <div class="copy-row-body">
+        <div class="copy-body-text" contenteditable="${isEditMode?'true':'false'}" spellcheck="false"
+          oninput="syncCopyText('${c.id}',this)">${escHtml(c.text)}</div>
+        <div class="copy-body-footer">
+          <button class="tbtn-sm add-pill-btn" onclick="addCopyTag('${c.id}')">＋ 添加标签</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleCopy(id) {
+  const c = p3.copies.find(x=>x.id===id);
+  if (c) { c.expanded = !c.expanded; renderCopies(); }
+}
+function syncCopyTitle(id, el) {
+  const c = p3.copies.find(x=>x.id===id);
+  if (c) { c.title = el.innerText; schedSave(); }
+}
+function syncCopyText(id, el) {
+  const c = p3.copies.find(x=>x.id===id);
+  if (c) { c.text = el.innerText; schedSave(); }
+}
+function copyCopyItem(id, btn) {
+  const c = p3.copies.find(x=>x.id===id);
+  if (c) copyText(btn, c.text);
+}
+function addCopy() {
+  p3.copies.push({ id:genId(), title:'新模板标题（点击修改）', tags:[], expanded:true, text:'在这里填写文案内容…' });
+  renderCopies(); schedSave();
+}
+function delCopy(id) {
+  p3.copies = p3.copies.filter(c=>c.id!==id);
+  renderCopies(); schedSave();
+}
+function addCopyTag(copyId) {
+  const c = p3.copies.find(x=>x.id===copyId);
+  if (!c) return;
+  const label = prompt('输入标签名称（如：虚恋、甜宠、搞笑）：');
+  if (!label) return;
+  c.tags.push({ text:label.trim(), color:nextColor() });
+  renderCopies(); schedSave();
+}
+function delCopyTag(copyId, tagIdx) {
+  const c = p3.copies.find(x=>x.id===copyId);
+  if (c) { c.tags.splice(tagIdx,1); renderCopies(); schedSave(); }
+}
+
+// ── Helpers ──
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function copyEl(el, btn) {
+  copyText(btn, el.innerText);
+}
+
+// ── Init P3 ──
+function initP3() {
+  renderRefs();
+  renderOpenings();
+  renderCopies();
+}
+
+// ══════════════════════════════════════════
+//  COPY
+// ══════════════════════════════════════════
+function copyBox(id, btn) {
+  const el = document.getElementById(id);
+  if (el) copyText(btn, el.innerText);
+}
+function copyText(btn, text) {
+  const done = () => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ 已复制'; btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 1800);
+  };
+  if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done).catch(()=>fb(text,done)); }
+  else fb(text,done);
+}
+function fb(text, cb) {
+  const ta=document.createElement('textarea'); ta.value=text;
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta); cb();
+}
+
+// ══════════════════════════════════════════
+//  IMAGE / VIDEO SLOTS
+// ══════════════════════════════════════════
+function slotClick(slot) {
+  if (!isEditMode) return;
+  const input = document.createElement('input');
+  input.type='file'; input.accept='image/*,video/*';
+  input.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    if (file.type.startsWith('video/')) {
+      // 视频：使用 ObjectURL 播放（本次会话有效）
+      const objUrl = URL.createObjectURL(file);
+      videoFiles[slot.id] = file;
+      setSlotVideo(slot, objUrl);
+      schedSave();
+    } else {
+      // 图片：压缩后存 localStorage
+      const reader = new FileReader();
+      reader.onload = ev => compressImage(ev.target.result, 900, compressed => {
+        setSlotImage(slot, compressed);
+        try { localStorage.setItem('img_'+slot.id, compressed); } catch(ex){}
+        schedSave();
+      });
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
+}
+
+function compressImage(dataUrl, maxW, cb) {
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    let w=img.width, h=img.height;
+    if (w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+    canvas.width=w; canvas.height=h;
+    canvas.getContext('2d').drawImage(img,0,0,w,h);
+    cb(canvas.toDataURL('image/jpeg',.82));
+  };
+  img.src = dataUrl;
+}
+
+function setSlotImage(slot, src) {
+  const img   = slot.querySelector('.slot-img');
+  const video = slot.querySelector('.slot-video');
+  const empty = slot.querySelector('.slot-empty');
+  if (video) { video.src=''; video.style.display='none'; }
+  img.src = src; img.style.display = 'block';
+  if (empty) empty.style.display = 'none';
+  slot.classList.add('has-img');
+  slot.classList.remove('has-video');
+}
+
+function setSlotVideo(slot, src) {
+  const img   = slot.querySelector('.slot-img');
+  const video = slot.querySelector('.slot-video');
+  const empty = slot.querySelector('.slot-empty');
+  if (img) { img.src=''; img.style.display='none'; }
+  video.src = src; video.style.display = 'block';
+  if (empty) empty.style.display = 'none';
+  slot.classList.add('has-img','has-video');
+}
+
+function clearSlot(e, slotId) {
+  e.stopPropagation();
+  const slot = document.getElementById(slotId);
+  if (!slot) return;
+  const img   = slot.querySelector('.slot-img');
+  const video = slot.querySelector('.slot-video');
+  const empty = slot.querySelector('.slot-empty');
+  // 释放 ObjectURL
+  if (videoFiles[slotId]) { URL.revokeObjectURL(video.src); delete videoFiles[slotId]; }
+  if (img)   { img.src='';   img.style.display='none'; }
+  if (video) { video.src=''; video.style.display='none'; }
+  if (empty) empty.style.display='block';
+  slot.classList.remove('has-img','has-video');
+  try { localStorage.removeItem('img_'+slotId); } catch(ex){}
+  schedSave();
+}
+
+// ══════════════════════════════════════════
+//  ADD / DELETE STEPS
+// ══════════════════════════════════════════
+function delStep(btn) {
+  const step = btn.closest('.step');
+  const list = step.closest('.step-list');
+  step.remove();
+  renumberSteps(list);
+  schedSave();
+}
+
+function addStep(listId, prefix) {
+  const list = document.getElementById(listId);
+  const slotId = prefix + 'x' + Date.now();
+  const div = document.createElement('div');
+  div.className = 'step';
+  div.innerHTML = `
+    <div class="step-num">${list.querySelectorAll('.step').length+1}</div>
+    <div class="step-body">
+      <p contenteditable="true" spellcheck="false">点击此处编辑步骤内容</p>
+      <div class="tip" contenteditable="true" spellcheck="false" style="display:none">提示文字（可删除此行：直接清空内容即可）</div>
+      <div class="img-slot" id="slot-${slotId}" onclick="slotClick(this)">
+        <div class="slot-empty"><span class="slot-icon">📸</span><span class="slot-action">点击上传图片 / 视频</span><span class="slot-hint">截图说明</span></div>
+        <img class="slot-img" src=""><div class="slot-overlay">📷 点击更换</div>
+        <button class="btn-clear-img" onclick="clearSlot(event,'slot-${slotId}')">×</button>
+      </div>
+    </div>
+    <button class="btn-del-step" onclick="delStep(this)">×</button>`;
+  list.appendChild(div);
+  // focus new text
+  div.querySelector('p').focus();
+  schedSave();
+}
+
+function renumberSteps(list) {
+  list.querySelectorAll('.step').forEach((s,i) => {
+    const num = s.querySelector('.step-num');
+    if (num) num.textContent = i+1;
+  });
+}
+
+// ══════════════════════════════════════════
+//  ADD / DELETE FLOW ITEMS
+// ══════════════════════════════════════════
+function delFlowItem(btn) {
+  const wrap = btn.closest('.flow-item-wrap');
+  const flow = wrap.parentElement;
+  // Remove this wrap
+  wrap.remove();
+  // Clean up trailing arrow on last item
+  const wraps = flow.querySelectorAll('.flow-item-wrap');
+  wraps.forEach((w, i) => {
+    const arrow = w.querySelector('.flow-arrow');
+    if (i === wraps.length-1 && arrow) arrow.remove();
+    else if (i < wraps.length-1 && !arrow) {
+      const sp = document.createElement('span');
+      sp.className='flow-arrow'; sp.textContent='→';
+      w.appendChild(sp);
+    }
+  });
+  schedSave();
+}
+
+function addFlowItem(flowId) {
+  const flow = document.getElementById(flowId);
+  const wraps = flow.querySelectorAll('.flow-item-wrap');
+  // Add arrow to current last item if not there
+  if (wraps.length > 0) {
+    const last = wraps[wraps.length-1];
+    if (!last.querySelector('.flow-arrow')) {
+      const sp = document.createElement('span');
+      sp.className='flow-arrow'; sp.textContent='→';
+      last.appendChild(sp);
+    }
+  }
+  const wrap = document.createElement('div');
+  wrap.className='flow-item-wrap';
+  wrap.innerHTML=`<div class="flow-item" contenteditable="true" spellcheck="false">新步骤</div>
+    <button class="btn-del-flow" onclick="delFlowItem(this)">×</button>`;
+  flow.insertBefore(wrap, flow.querySelector('.btn-add-flow'));
+  wrap.querySelector('.flow-item').focus();
+  schedSave();
+}
+
+// ══════════════════════════════════════════
+//  SAVE / LOAD (localStorage)
+// ══════════════════════════════════════════
+function schedSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 600);
+}
+
+function saveState() {
+  try {
+    // Save text content of key editable areas
+    const s = {};
+    // Collect all contenteditable elements with an id
+    document.querySelectorAll('[contenteditable][id]').forEach(el => {
+      s[el.id] = el.innerHTML;
+    });
+    // Save panels innerHTML (for steps/flow structure)
+    document.querySelectorAll('.panel').forEach((p,i) => {
+      // Temporarily strip contenteditable attrs for clean save
+      const c = p.cloneNode(true);
+      c.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+      s['__panel_'+i] = c.innerHTML;
+    });
+    s['__main_title'] = document.getElementById('main-title').innerHTML;
+    s['__main_sub'] = document.getElementById('main-sub').innerHTML;
+    s['__p3'] = JSON.stringify(p3);
+    localStorage.setItem('tut_v2', JSON.stringify(s));
+  } catch(e) { console.warn('Save failed:', e); }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('tut_v2');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    document.querySelectorAll('.panel').forEach((p,i) => {
+      if (s['__panel_'+i]) p.innerHTML = s['__panel_'+i];
+    });
+    if (s['__main_title']) document.getElementById('main-title').innerHTML = s['__main_title'];
+    if (s['__main_sub'])   document.getElementById('main-sub').innerHTML   = s['__main_sub'];
+    // 恢复 P3 数据
+    if (s['__p3']) {
+      try { p3 = JSON.parse(s['__p3']); } catch(e) {}
+    }
+    // 恢复图片（视频不持久化，刷新后需重新上传）
+    document.querySelectorAll('.img-slot').forEach(slot => {
+      const src = localStorage.getItem('img_'+slot.id);
+      if (src) setSlotImage(slot, src);
+    });
+  } catch(e) { console.warn('Load failed:', e); }
+}
+
+// ══════════════════════════════════════════
+//  RESET
+// ══════════════════════════════════════════
+function showReset() { document.getElementById('confirm-overlay').classList.add('show'); }
+function hideReset() { document.getElementById('confirm-overlay').classList.remove('show'); }
+function doReset() {
+  Object.keys(localStorage).forEach(k => {
+    if (k.startsWith('tut_') || k.startsWith('img_')) localStorage.removeItem(k);
+  });
+  p3 = JSON.parse(JSON.stringify(DEFAULT_P3));
+  location.reload();
+}
+
+// ══════════════════════════════════════════
+//  EXPORT（支持图片+视频，异步）
+// ══════════════════════════════════════════
+async function exportHTML() {
+  saveState();
+
+  // 先把视频文件转为 data URL（< 80MB 才内嵌，否则跳过并提示）
+  const videoDataUrls = {};
+  const oversized = [];
+  for (const [slotId, file] of Object.entries(videoFiles)) {
+    if (file.size < 80 * 1024 * 1024) {
+      videoDataUrls[slotId] = await new Promise(res => {
+        const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(file);
+      });
+    } else {
+      oversized.push(slotId);
+    }
+  }
+  if (oversized.length) alert('注意：有 '+oversized.length+' 个视频超过 80MB，导出版将不包含这些视频，建议压缩后重新上传。');
+
+  const clone = document.documentElement.cloneNode(true);
+  const tb = clone.querySelector('#edit-toolbar'); if(tb) tb.remove();
+  const co = clone.querySelector('#confirm-overlay'); if(co) co.remove();
+  clone.querySelector('body').classList.remove('edit-mode');
+  clone.querySelectorAll('.btn-del-step,.btn-add-step,.btn-del-flow,.btn-add-flow,.btn-clear-img').forEach(e=>e.remove());
+  clone.querySelector('.tab-bar').style.top='0';
+
+  clone.querySelectorAll('.img-slot').forEach(slot => {
+    const overlay = slot.querySelector('.slot-overlay'); if(overlay) overlay.remove();
+    slot.style.cursor='default'; slot.removeAttribute('onclick');
+
+    const img   = slot.querySelector('.slot-img');
+    const video = slot.querySelector('.slot-video');
+    const empty = slot.querySelector('.slot-empty');
+
+    const imgSrc   = localStorage.getItem('img_'+slot.id);
+    const vidDataUrl = videoDataUrls[slot.id];
+
+    if (vidDataUrl) {
+      // 嵌入视频
+      if (empty) empty.remove();
+      if (img)   img.remove();
+      video.src = vidDataUrl; video.style.display='block';
+    } else if (imgSrc) {
+      // 嵌入图片
+      if (empty) empty.remove();
+      if (video) video.remove();
+      img.src = imgSrc; img.style.display='block';
+    } else {
+      // 没有媒体：整个槽去掉
+      slot.remove(); return;
+    }
+  });
+
+  clone.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  // iOS Safari 不支持 a.download，优先使用 Web Share API 分享文件
+  if (isIOS && navigator.canShare) {
+    const file = new File([blob], '红果短剧推广教程_达人版.html', {type:'text/html'});
+    if (navigator.canShare({files:[file]})) {
+      try { await navigator.share({files:[file], title:'红果短剧推广教程_达人版'}); return; } catch(e) {}
+    }
+  }
+  // iOS 兜底：在新标签页打开，用户可「存储到文件」或「存储到备忘录」
+  if (isIOS) {
+    const objUrl = URL.createObjectURL(blob);
+    window.open(objUrl, '_blank');
+    setTimeout(()=>URL.revokeObjectURL(objUrl), 30000);
+    return;
+  }
+  // 桌面端正常下载
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '红果短剧推广教程_达人版.html';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 8000);
+}
+</script>
+</body>
+</html>
